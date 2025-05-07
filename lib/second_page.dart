@@ -10,7 +10,7 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateMixin {
   bool _expired = false;
-  bool _alertEnabled = true; 
+  bool _alertEnabled = true;
   final double totalGB = 10.0;
   double _usedGB = 3.5;
   late AnimationController _progressController;
@@ -41,49 +41,50 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryColor = Color(0xFF4CADC4); 
-    const Color progressColor = Color(0xFF33899E); 
+    const Color primaryColor = Color(0xFF4CADC4);
+    const Color progressColor = Color(0xFF33899E);
     const Color expiredBorderColor = Color(0xFFD54444);
     const Color expiredTextColor = Color(0xFFF71B1B);
     const Color titleTextColor = Color(0xFF155A6A);
     const double strokeWidth = 20.0;
-    final double circleSize = MediaQuery.of(context).size.width * 0.75;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(width: 8),
-                      const Text(
-                        "Flex Travel SIM",
-                        style: TextStyle(
-                          fontFamily: 'Ubuntu',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: titleTextColor,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset('assets/logo.png', height: 28),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "Flex Travel SIM",
+                          style: TextStyle(
+                            fontFamily: 'Ubuntu',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: titleTextColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage('assets/avatar.png'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 62),
-              Center(
-                child: AnimatedBuilder(
+                      ],
+                    ),
+                    const CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage('assets/avatar.png'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 48),
+                AnimatedBuilder(
                   animation: _progressController,
                   builder: (context, child) {
                     final fraction = _progressController.value;
@@ -91,6 +92,7 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                     final usedText = used == used.floorToDouble()
                         ? used.toInt().toString()
                         : used.toStringAsFixed(1);
+                    final double circleSize = 250;
 
                     return Stack(
                       alignment: Alignment.center,
@@ -99,7 +101,7 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                           size: Size(circleSize, circleSize),
                           painter: ProgressCirclePainter(
                             completePercent: fraction * 100,
-                            lineColor: primaryColor, 
+                            lineColor: primaryColor,
                             completeColor: _expired ? expiredBorderColor : progressColor,
                             width: strokeWidth,
                           ),
@@ -117,7 +119,7 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                                 child: Text(
                                   _expired ? 'TRAFFIC HAS ENDED' : 'YOUR TRAFFIC',
                                   key: ValueKey(_expired),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: 'Ubuntu',
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -141,7 +143,7 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                                 style: TextStyle(
                                   fontFamily: 'Ubuntu',
                                   fontSize: 16,
-                                  color: _expired ? expiredTextColor: titleTextColor,
+                                  color: _expired ? expiredTextColor : titleTextColor,
                                 ),
                               ),
                             ],
@@ -151,78 +153,78 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                     );
                   },
                 ),
-              ),
-              Spacer(flex: 2),
-              _expired
-                  ? Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: expiredBorderColor),
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Traffic has ended',
-                          style: TextStyle(
-                            color: expiredBorderColor,
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w600,
-                          ),
+                const Spacer(),
+                _expired
+                    ? Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: expiredBorderColor),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
                         ),
-                      ),
-                    )
-                  : Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: primaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Alert when 1h from expiration",
+                        child: const Center(
+                          child: Text(
+                            'Traffic has ended',
                             style: TextStyle(
+                              color: expiredBorderColor,
                               fontFamily: 'Ubuntu',
-                              fontSize: 16,
-                              color: progressColor,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Switch(
-                            value: _alertEnabled,
-                            onChanged: (value) => setState(() => _alertEnabled = value),
-                            activeTrackColor: progressColor.withOpacity(0.5),
-                            activeColor: progressColor,
-                          ),
-                        ],
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: primaryColor),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Alert when 1h from expiration",
+                              style: TextStyle(
+                                fontFamily: 'Ubuntu',
+                                fontSize: 16,
+                                color: progressColor,
+                              ),
+                            ),
+                            Switch(
+                              value: _alertEnabled,
+                              onChanged: (value) => setState(() => _alertEnabled = value),
+                              activeTrackColor: progressColor.withOpacity(0.5),
+                              activeColor: progressColor,
+                            ),
+                          ],
+                        ),
                       ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _toggleExpiration,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: progressColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 26),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _toggleExpiration,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: progressColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 26),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    minimumSize: const Size.fromHeight(50),
                   ),
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                child: Text(
-                  _expired ? "Add traffic (from \$5)" : "Add traffic (from \$5 / 10GB)",
-                  style: const TextStyle(
-                    fontFamily: 'Ubuntu',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  child: Text(
+                    _expired ? "Add traffic (from \$5)" : "Add traffic (from \$5 / 10GB)",
+                    style: const TextStyle(
+                      fontFamily: 'Ubuntu',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
