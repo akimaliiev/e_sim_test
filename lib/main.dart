@@ -1,4 +1,5 @@
 import 'package:e_sim_app/second_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -32,36 +33,33 @@ class ESimHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final isWideScreen = width > 600;
 
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
           // Adaptive background
-          if (width > 600) ...[
             Positioned(
               bottom: 0,
               left: 0,
-              child: Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.rotationY(math.pi),
-                child: Image.asset(
-                  'assets/background.png',
-                  width: width * 0.4,
+              child: Image.asset(
+                  'assets/background_left.png',
+                  width: isWideScreen ? math.min(width * 0.3, 300) : 150,
                   fit: BoxFit.contain,
                 ),
               ),
-            ),
+            
             Positioned(
               bottom: 0,
               right: 0,
               child: Image.asset(
-                'assets/background.png',
-                width: width * 0.6,
+                'assets/background_right.png',
+                width: isWideScreen ? math.min(width * 0.45, 450) :200,
                 fit: BoxFit.contain,
               ),
             ),
-          ],
+          
 
           SafeArea(
             child: Center(
@@ -87,13 +85,15 @@ class ESimHomePage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 40),
-                      const Text(
+                      Text(
                         'Одна eSim для всех поездок',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
                           fontFamily: 'HelveticaNeue',
+                          height: 1.1,
+                          letterSpacing: -0.28
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -135,7 +135,7 @@ class ESimHomePage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'HelveticaNeue',
+                                fontFamily: 'Ubuntu',
                               ),
                             ),
                             SizedBox(width: 8),
@@ -147,14 +147,18 @@ class ESimHomePage extends StatelessWidget {
                       Center(
                         child: Text(
                           'Ваш баланс: 1\$',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
+                            color: Colors.white,
+                            fontSize: 14,
                             fontFamily: 'HelveticaNeue',
+                            fontWeight: FontWeight.w500,
+                            height: 1.3,
+                            letterSpacing: 0,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(context, '2Page');
@@ -165,7 +169,7 @@ class ESimHomePage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 20),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [Colors.lightBlueAccent, Colors.blueAccent],
+                              colors: [Color(0xFF3761DF), Color(0xFF25ABFF)],
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                             ),
@@ -208,7 +212,7 @@ class ESimHomePage extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
-                fontFamily: 'HelveticaNeue',
+                fontFamily: 'Ubuntu',
               ),
             ),
           ),

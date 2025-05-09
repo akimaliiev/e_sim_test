@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class SecondPage extends StatefulWidget {
@@ -46,7 +46,8 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
     const Color expiredBorderColor = Color(0xFFD54444);
     const Color expiredTextColor = Color(0xFFF71B1B);
     const Color titleTextColor = Color(0xFF155A6A);
-    const double strokeWidth = 20.0;
+    const double borderWidth = 25.6;
+    const double circleSize = 314;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -64,7 +65,6 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                   children: [
                     Row(
                       children: [
-                        Image.asset('assets/logo.png', height: 28),
                         const SizedBox(width: 8),
                         const Text(
                           "Flex Travel SIM",
@@ -92,20 +92,49 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                     final usedText = used == used.floorToDouble()
                         ? used.toInt().toString()
                         : used.toStringAsFixed(1);
-                    final double circleSize = 250;
 
                     return Stack(
                       alignment: Alignment.center,
                       children: [
+                        // Тень под кругом
+                        Positioned(
+                          bottom: 8,
+                          child: ClipPath(
+                            clipper: _CircleBottomShadowClipper(),
+                            child: Container(
+                              width: circleSize * 1.15,
+                              height: circleSize * 0.3,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 30,
+                                    spreadRadius: 55,
+                                    offset: const Offset(0, 15),
+                                  ),
+                                  // BoxShadow(
+                                  //   color: Colors.black.withOpacity(0.1),
+                                  //   blurRadius: 70,
+                                  //   spreadRadius: 100,
+                                  //   offset: const Offset(0, 10),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Основной круг
                         CustomPaint(
                           size: Size(circleSize, circleSize),
                           painter: ProgressCirclePainter(
                             completePercent: fraction * 100,
                             lineColor: primaryColor,
                             completeColor: _expired ? expiredBorderColor : progressColor,
-                            width: strokeWidth,
+                            width: borderWidth,
                           ),
                         ),
+                        // Внутреннее содержимое
                         SizedBox(
                           width: circleSize,
                           height: circleSize,
@@ -119,7 +148,7 @@ class _SecondPageState extends State<SecondPage> with SingleTickerProviderStateM
                                 child: Text(
                                   _expired ? 'TRAFFIC HAS ENDED' : 'YOUR TRAFFIC',
                                   key: ValueKey(_expired),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontFamily: 'Ubuntu',
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -247,26 +276,26 @@ class ProgressCirclePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint baseLine = Paint()
+    final Paint baseLine = Paint()
       ..color = lineColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = width;
 
-    Paint progressLine = Paint()
+    final Paint progressLine = Paint()
       ..color = completeColor
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke
       ..strokeWidth = width;
 
-    Offset center = Offset(size.width / 2, size.height / 2);
-    double radius = min(size.width / 2, size.height / 2);
+    final Offset center = Offset(size.width / 2, size.height / 2);
+    final double radius = math.min(size.width / 2, size.height / 2) - width / 2;
 
     canvas.drawCircle(center, radius, baseLine);
 
-    double sweepAngle = 2 * pi * (completePercent / 100);
+    final double sweepAngle = 2 * math.pi * (completePercent / 100);
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
+      -math.pi / 2,
       sweepAngle,
       false,
       progressLine,
@@ -275,4 +304,28 @@ class ProgressCirclePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+class _CircleBottomShadowClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    final radius = size.width / 2;
+    
+    // Рисуем нижнюю половину круга
+    path.moveTo(0, size.height * 0.7);
+    path.quadraticBezierTo(
+      size.width / 2, 
+      size.height * 1.5,
+      size.width, 
+      size.height * 0.7
+    );
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+    
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
